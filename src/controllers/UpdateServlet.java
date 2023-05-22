@@ -40,7 +40,7 @@ public class UpdateServlet extends HttpServlet {
 
             // セッションスコープからメッセージのIDを取得して
             // 該当のIDのメッセージ1件のみをデータベースから取得
-            Message m = em.find(Message.class, (Integer)(request.getSession().getAttribute("message_id")));
+            Message m = em.find(Message.class, (Integer)(request.getSession().getAttribute("task_id")));
 
             // フォームの内容を各フィールドに上書き
             String title = request.getParameter("title");
@@ -59,7 +59,7 @@ public class UpdateServlet extends HttpServlet {
 
                 // フォームに初期値を設定、さらにエラーメッセージを送る
                 request.setAttribute("_token", request.getSession().getId());
-                request.setAttribute("message", m);
+                request.setAttribute("task", m);
                 request.setAttribute("errors", errors);
 
                 RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/edit.jsp");
@@ -72,23 +72,13 @@ public class UpdateServlet extends HttpServlet {
                 em.close();
 
                 // セッションスコープ上の不要になったデータを削除
-                request.getSession().removeAttribute("message_id");
+                request.getSession().removeAttribute("task_id");
 
                 // indexページへリダイレクト
                 response.sendRedirect(request.getContextPath() + "/index");
             }
 
-            // データベースを更新
-            em.getTransaction().begin();
-            em.getTransaction().commit();
-            request.getSession().setAttribute("flush", "更新が完了しました。");
-            em.close();
 
-            // セッションスコープ上の不要になったデータを削除
-            request.getSession().removeAttribute("message_id");
-
-            // indexページへリダイレクト
-            response.sendRedirect(request.getContextPath() + "/index");
         }
     }
 }
