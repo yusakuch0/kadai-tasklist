@@ -41,13 +41,13 @@ public class IndexServlet extends HttpServlet {
         } catch(NumberFormatException e) {}
 
         // 最大件数と開始位置を指定してメッセージを取得
-        List<Task> tasks = em.createNamedQuery("getAllMessages", Task.class)
+        List<Task> tasks = em.createNamedQuery("getAllTasks", Task.class)
                                    .setFirstResult(15 * (page - 1))
                                    .setMaxResults(15)
                                    .getResultList();
 
         // 全件数を取得
-        long tasks_count = (long)em.createNamedQuery("getMessagesCount", Long.class)
+        long tasks_count = (long)em.createNamedQuery("getTasksCount", Long.class)
                                       .getSingleResult();
 
         em.close();
@@ -63,7 +63,7 @@ public class IndexServlet extends HttpServlet {
             request.getSession().removeAttribute("flush");
         }
 
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/index.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/tasks/index.jsp");
         rd.forward(request, response);
     }
 
